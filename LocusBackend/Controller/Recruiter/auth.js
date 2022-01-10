@@ -4,6 +4,7 @@ const jwt = require("jsonwebtoken");
 
 const HttpError = require("../../models/http-error");
 const Recruiter = require("../../Models/recruiter/auth");
+const RecruiterProfile = require('../../Models/recruiter/recruiterProfile');
 
 const signup = async (req, res, next) => {
   //   const errors = validationResult(req);
@@ -21,7 +22,7 @@ const signup = async (req, res, next) => {
     existingUser = await Recruiter.findOne({ emailormobile: emailormobile });
   } catch (err) {
     const error = new HttpError(
-      "Signing up failed, please try again later.",
+      "Signing up failed, please try again later1.",
       500
     );
     return next(error);
@@ -52,9 +53,14 @@ const signup = async (req, res, next) => {
 
   try {
     await createdUser.save();
+    const newRecruiter = new RecruiterProfile({
+      recruiterId:createdUser.id,
+      jobs:[]
+      })
+    await newRecruiter.save();
   } catch (err) {
     const error = new HttpError(
-      "Signing up failed, please try again later.",
+      "Signing up failed, please try again later save signup.",
       500
     );
     return next(error);
@@ -69,11 +75,16 @@ const signup = async (req, res, next) => {
     );
   } catch (err) {
     const error = new HttpError(
-      "Signing up failed, please try again later.",
+      "Signing up failed, please try again later2.",
       500
     );
     return next(error);
   }
+
+  
+   
+
+
 
   res.status(201).json({
     userId: createdUser.id,

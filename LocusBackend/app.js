@@ -1,11 +1,11 @@
 const express = require("express");
 const HttpError = require("./Models/http-Error");
 const app = express();
-const mongoose = require("mongoose");
 require("dotenv").config();
-const PORT = 5000;
+const PORT = 8000;
 const userRoutes = require("./routes/User");
 const recuirterRoutes = require("./routes/Recuirter");
+const uploaderRoutes = require("./routes/help")
 app.use(express.json());
 
 const connectDB = require("./config/db");
@@ -21,8 +21,11 @@ app.use((req, res, next) => {
 
   next();
 });
+app.use("/api/upload",uploaderRoutes);
 app.use("/api/user", userRoutes);
 app.use("/api/recruiter", recuirterRoutes);
+
+
 
 app.use((req, res, next) => {
   const error = new HttpError("Could not find this route.", 404);

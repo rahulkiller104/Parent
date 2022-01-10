@@ -13,7 +13,7 @@ import ForgotPassword from '../screens/ForgotPassword';
 import UserDetails from '../screens/UserDetails';
 import AllCertificate from '../screens/Allcertificate';
 import AllSkills from '../screens/AllSkills';
-// import JobList from '../screens/JobList';
+import JobList from '../screens/Recruiter/JobList';
 import JobDetails from '../screens/JobDetails';
 import MainScreen from '../screens/MainScreen';
 import FavoriteScreen from '../screens/favorite';
@@ -21,7 +21,8 @@ import MessageScreen from '../screens/Message';
 import FilterScreen from '../screens/FilterScreen';
 import Icon, {Icons} from '../components/Icons/icon';
 import Chat from '../components/ITEM/Message/Chat';
-// import {useSelector} from 'react-redux';
+import {useSelector} from 'react-redux';
+import SwipeScreen from '../screens/Recruiter/swipeScreen';
 
 const Stack = createNativeStackNavigator();
 const BottomTab = createBottomTabNavigator();
@@ -137,6 +138,7 @@ const TabArr = [
 ];
 const Tab = createBottomTabNavigator();
 const Tab4 = () => {
+
   return (
     <Tab.Navigator>
       {TabArr.map((_, index) => {
@@ -163,7 +165,34 @@ const Tab4 = () => {
 
 ///for the recruiter navigation
 
+const JobStackNavigator = () => (
+  <Stack.Navigator>
+    <Stack.Screen 
+    component={JobList}
+    name='joblist'
+    options={{headerShown: false}}
+    />
+     <Stack.Screen 
+    component={JobDetails}
+    name='jobdetails'
+    options={{headerShown: false}}
+    />
+    <Stack.Screen  
+    name='message'
+    options={{headerShown: false}}
+    component={MessageNavigator}/>
+    <Stack.Screen  
+    component={SwipeScreen}
+    name='swipe'
+    options={{headerShown: false}}
+    />
+
+  </Stack.Navigator>
+)
+
 const AllNavigator = () => {
+  const candidate=useSelector(state=>state.candidate);
+  console.log(candidate)
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -173,7 +202,7 @@ const AllNavigator = () => {
       />
       <Stack.Screen
         name="afterauthscreen"
-        component={Tab4}
+        component={candidate.isCandidate?Tab4:JobStackNavigator}
         options={{headerShown: false}}
       />
       <Stack.Screen

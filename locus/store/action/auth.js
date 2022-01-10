@@ -4,7 +4,7 @@ export const SIGNUP = 'SIGNUP';
 export const LOGIN = 'LOGIN';
 import axios from 'axios';
 
-const LINK = 'https://ed63-2401-4900-36bc-497e-49c9-2ee3-8300-6897.ngrok.io';
+const LINK = 'https://cold-fish-88.loca.lt';
 
 export const signup = (
   firstName,
@@ -169,6 +169,13 @@ export const authWithSSO = (
 
         const resData = await response.json();
         console.log(resData);
+        dispatch({
+          type: SIGNUP,
+          userData: {
+            userId: resData.userId,
+            token: resData.token,
+          },
+        });
       } else {
         const data = {
           firstName: firstName,
@@ -210,7 +217,15 @@ export const authWithSSO = (
 
         const resData = await response.json();
         console.log(resData);
+        dispatch({
+          type: SIGNUP,
+          userData: {
+            userId: resData.userId,
+            token: resData.token,
+          },
+        });
       }
+
     } catch (err) {
       console.log(err.message);
       throw err.message;

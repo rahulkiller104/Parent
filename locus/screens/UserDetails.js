@@ -16,6 +16,9 @@ import BoldLines from '../assestsJSX/SignUp/BoldLine';
 import SkillsItem from '../components/ITEM/SkillsItem';
 import OutLinedButton from '../components/UI/OutlinedButton';
 import CertificateItem from '../components/ITEM/CertificateItem';
+import {useDispatch} from 'react-redux';
+import * as userDetailActions from '../store/action/UserDetails'
+
 
 const REDUCER_UPDATE = 'UPDATE';
 const fromReducer = (state, action) => {
@@ -45,9 +48,9 @@ const fromReducer = (state, action) => {
 const UserDetails = props => {
   const [skillAddModel, setSkillAddModel] = useState(false);
   const [certifcationModel, setCertifcationModel] = useState(false);
-  const [skills, setSkills] = useState([]);
-  const [certicate, setcerticate] = useState([]);
-
+  const [skills, setSkills] = useState([]); //skill rating
+  const [certicates, setcerticates] = useState([]);
+  const dispatch = useDispatch();
   const [profileState, dispatchprofileState] = useReducer(fromReducer, {
     inputValues: {
       name: '',
@@ -89,9 +92,46 @@ const UserDetails = props => {
     },
   );
 
+  const [certificatestate, dispatchCertificates] = useReducer(
+    fromReducer,
+    {
+      inputValues: {
+        name:'',
+        platform:'',
+        issuedate: '',
+        expirydate: '',
+        credential: '',
+        imagelink:'https/ooi/oiuo'
+      },
+      inputValidities: {
+        name:false,
+        platform:false,
+        issuedate: false,
+        expirydate: false,
+        credential: false,
+      },
+      formIsValid: false,
+    },
+  );
+  const [skillState, dispatchSkillState] = useReducer(
+    fromReducer,
+    {
+      inputValues: {
+        name:'',
+        rating:''
+      },
+      inputValidities: {
+        name:false,
+       rating:false
+      },
+      formIsValid: false,
+    },
+  );
+
   const personalInputChangeHandler = useCallback(
     (inputIdentifier, value, isValid) => {
       // console.log(formState);
+      
       dispatchprofileState({
         type: REDUCER_UPDATE,
         value: value,
@@ -114,10 +154,47 @@ const UserDetails = props => {
     },
     [dispatchproffesionalState],
   );
+ 
+ 
+  const skillChangeHandler = useCallback(
+    (inputIdentifier, value, isValid) => {
+      console.log(inputIdentifier, value, isValid)
+      console.log(skillState)
+      dispatchSkillState({
+        type: REDUCER_UPDATE,
+        value: value,
+        isValid: isValid,
+        input: inputIdentifier,
+      });
+    },
+    [dispatchSkillState],
+  );
+  const certificateChangeHandler = useCallback(
+    (inputIdentifier, value, isValid) => {
+      // console.log(certificatestate)
+      dispatchCertificates({
+        type: REDUCER_UPDATE,
+        value: value,
+        isValid: isValid,
+        input: inputIdentifier,
+      });
+    },
+    [dispatchCertificates],
+  );
 
+ const onSkillAdd=() => {
+  setSkills(prevSkills=>[...prevSkills,skillState.inputValues])
+  // console.log(skills);
+  setSkillAddModel(!skillAddModel)
+ }
+
+ const onCertificateAdded = ()=>{
+   setcerticates(prev=>[...prev,certificatestate.inputValues])
+   setCertifcationModel(!certifcationModel)
+  
+ }
   const submitHandler = () => {
-    console.log(profileState);
-    console.log(proffesionalState);
+   dispatch(userDetailActions.setUserProfileDetails(profileState.inputValues,proffesionalState.inputValues,skills,certicates))
   };
   return (
     <ScrollView style={styles.screen}>
@@ -259,11 +336,12 @@ const UserDetails = props => {
           <Text style={styles.headText}>Skills</Text>
         </View>
         <View style={styles.skillsContainer}>
-          <SkillsItem star={3} skill="Java" />
+          {/* <SkillsItem star={3} skill="Java" />
           <SkillsItem star={1} skill="AWS" />
           <SkillsItem star={2} skill="Python" />
           <SkillsItem star={4} skill="React-Native" />
-          <SkillsItem star={5} skill="ML" />
+          <SkillsItem star={5} skill="ML" /> */}
+          {skills.map((skill)=><SkillsItem star={skill.rating} key={skill.name} skill={skill.name} />)}
         </View>
         <View style={styles.buttons}>
           {/* modal for skill */}
@@ -277,28 +355,28 @@ const UserDetails = props => {
             <View style={styles.centeredView}>
               <View style={styles.modalView}>
                 <Input
-                  id="skill"
+                  id="name"
                   label="Skill"
                   required
                   placeholder="Your skill"
                   errorText="Please enter a Valid Skill."
                   initialValue=""
-                  onInputChange={proffesionalInputChangeHandler}
+                  onInputChange={skillChangeHandler}
                 />
                 <Input
-                  id="star"
+                  id="rating"
                   label="Rating"
                   required
                   placeholder="rate your skill 1 to 5"
                   errorText="Please enter a Valid Rating."
                   initialValue=""
                   keyboardType="numeric"
-                  onInputChange={proffesionalInputChangeHandler}
+                  onInputChange={skillChangeHandler}
                 />
                 <TouchableOpacity
                   activeOpacity={0.6}
                   style={styles.buttonStyle}
-                  onPress={() => setSkillAddModel(!skillAddModel)}>
+                  onPress={onSkillAdd}>
                   <Text style={styles.text}>Add Skill</Text>
                 </TouchableOpacity>
               </View>
@@ -321,9 +399,8 @@ const UserDetails = props => {
           <Text style={styles.headText}>Certificates</Text>
         </View>
         <View style={styles.skillsContainer}>
-          <CertificateItem course="Foundation Of User Experience in (UX) Design" />
-          <CertificateItem course="Foundation Of User Experience in (UI) Design" />
-          <CertificateItem course="Foundation Of User Experience in (UX) Design" />
+          {certicates.map((course, index)=>(<CertificateItem course={course.name} key={index} />))}
+         
         </View>
         {/* model for certifcationModel */}
         <Modal
@@ -333,14 +410,19 @@ const UserDetails = props => {
           onRequestClose={() => setCertifcationModel(!certifcationModel)}>
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
+            {/* name:'',
+        platform:'',
+        issuedate: '',
+        expirydate: '',
+        credential: '', */}
               <Input
-                id="certicatename"
+                id="name"
                 label="Certicate Name"
                 required
                 placeholder="Name of the certificate"
                 errorText="Please enter a Valid certificate Name"
                 initialValue=""
-                onInputChange={proffesionalInputChangeHandler}
+                onInputChange={certificateChangeHandler}
               />
               <Input
                 id="platform"
@@ -349,7 +431,7 @@ const UserDetails = props => {
                 placeholder="Platform like Udemy"
                 errorText="Please enter a Valid Platform."
                 initialValue=""
-                onInputChange={proffesionalInputChangeHandler}
+                onInputChange={certificateChangeHandler}
               />
               <Input
                 id="issuedate"
@@ -358,7 +440,7 @@ const UserDetails = props => {
                 placeholder="issuedate like 12/2/2000"
                 errorText="Please enter a Valid issuedate."
                 initialValue=""
-                onInputChange={proffesionalInputChangeHandler}
+                onInputChange={certificateChangeHandler}
               />
               <Input
                 id="expirydate"
@@ -367,7 +449,7 @@ const UserDetails = props => {
                 placeholder="expirydate like 12/2/2000"
                 errorText="Please enter a Valid expirydate."
                 initialValue=""
-                onInputChange={proffesionalInputChangeHandler}
+                onInputChange={certificateChangeHandler}
               />
               <Input
                 id="credential"
@@ -376,12 +458,12 @@ const UserDetails = props => {
                 placeholder="url of certificate"
                 errorText="Please enter a Valid url."
                 initialValue=""
-                onInputChange={proffesionalInputChangeHandler}
+                onInputChange={certificateChangeHandler}
               />
               <TouchableOpacity
                 activeOpacity={0.6}
                 style={styles.buttonStyle}
-                onPress={() => setCertifcationModel(!certifcationModel)}>
+                onPress={onCertificateAdded}>
                 <Text style={styles.text}>Add Certificate</Text>
               </TouchableOpacity>
             </View>

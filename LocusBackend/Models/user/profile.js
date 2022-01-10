@@ -28,9 +28,8 @@ const SkillSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  star: {
-    type: Number,
-    default: 0,
+  rating: {
+    type: String,
   },
 });
 
@@ -43,7 +42,7 @@ const CertificateSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  orgname: {
+  platform: {
     type: String,
     required: true,
   },
@@ -51,11 +50,11 @@ const CertificateSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  expireydate: {
+  expirydate: {
     type: String,
     required: true,
   },
-  credentiallink: {
+  credential: {
     type: String,
     required: true,
   },
@@ -79,7 +78,7 @@ const ProfessionalSchema = new mongoose.Schema({
     required: true,
   },
   currentctc: {
-    type: Number,
+    type: String,
     required: true,
   },
   location: {

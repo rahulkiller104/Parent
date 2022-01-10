@@ -22,7 +22,7 @@ const isPresent = async (req, res, next) => {
     console.log(existingUser);
   } catch (err) {
     const error = new HttpError(
-      "Signing up failed, please try again later.",
+      "Signing up failed, please try again later isPresent.",
       500
     );
     return next(error);

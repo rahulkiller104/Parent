@@ -8,8 +8,10 @@ export default (state = initailValue, action) => {
   console.log(action, 'CANDIDATE');
   switch (action.type) {
     case ISCANDIDATE:
-      return state;
+      return {
+        isCandidate:action.isCandidate
+      }
     default:
-      return state;
+      return state;ßß
   }
 };

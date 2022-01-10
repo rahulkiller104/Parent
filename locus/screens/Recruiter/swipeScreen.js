@@ -1,18 +1,18 @@
 import React, {useRef} from 'react';
 import {View, Text, StyleSheet, Button} from 'react-native';
 import Swiper from 'react-native-deck-swiper';
-import SwipeBottom from '../components/ITEM/SwipeBottom';
-import SwipeCard from '../components/ITEM/SwipeCard';
-import SwipeScreenHead from '../components/ITEM/SwipeScreenHead';
-import Color from '../Constants/Color';
-import {DUMMY_JOBS} from '../Dummy/dummy';
+import SwipeBottom from '../../components/ITEM/SwipeBottom';
+import SwipeCard from '../../components/ITEM/Recruiter/SwipeCard';
+import SwipeScreenHead from '../../components/ITEM/SwipeScreenHead';
+import Color from '../../Constants/Color';
+import {DUMMY_JOBS} from '../../Dummy/dummy';
 
-const MainScreen = (props) => {
+const SwipeScreen = (props) => {
   const swipeRef = useRef();
   return (
     <View style={styles.screen}>
       <View style={styles.container}>
-        <SwipeScreenHead onClick={()=>{}}/>
+      <SwipeScreenHead back={true} onBack={()=>props.navigation.goBack()} onClick={()=>props.navigation.navigate('message')}/>
         <View>
           <View style={styles.swipercontainer}>
             <Swiper
@@ -23,7 +23,7 @@ const MainScreen = (props) => {
               disableTopSwipe={true}
               cards={DUMMY_JOBS}
               renderCard={job => {
-                return <SwipeCard job={job} />;
+                return <SwipeCard job={job}/>;
               }}
               onSwiped={cardIndex => {
                 console.log(cardIndex);
@@ -34,7 +34,9 @@ const MainScreen = (props) => {
               onSwipedRight={() => {
                 console.log('Right');
               }}
-              onSwipedBottom={() => props.navigation.navigate('jobdetails')}
+              onSwipedBottom={() => {
+                console.log('Bottom');
+              }}
               onSwipedAll={() => {
                 console.log('onSwipedAll');
               }}
@@ -60,4 +62,4 @@ const styles = StyleSheet.create({
     backgroundColor: Color.white,
   },
 });
-export default MainScreen;
+export default SwipeScreen;

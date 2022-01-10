@@ -1,23 +1,43 @@
 import React from 'react';
 import {StyleSheet, Text, View, TouchableOpacity, Image} from 'react-native';
 import Icon, {Icons} from '../Icons/icon';
-const SwipeScreenHead = () => {
+import {useSelector} from 'react-redux'
+const SwipeScreenHead = (props) => {
+  const candidate=useSelector(state=>state.candidate.isCandidate);
+  console.log(candidate)
   return (
     <View style={styles.screen}>
-      <TouchableOpacity style={styles.iconContainer}>
-        <Icon
+      { props.back?
+      <TouchableOpacity style={styles.iconContainer} onPress={props.onBack}>
+       <Icon
           name="arrow-left"
           type={Icons.MaterialCommunityIcons}
           size={25}
           color="#27374F"
         />
-      </TouchableOpacity>
+         </TouchableOpacity>:
+         <TouchableOpacity style={styles.iconContainer}>
+         <Icon
+          name="questioncircleo"
+          type={Icons.AntDesign}
+          size={25}
+          color="#27374F"
+        />
+      </TouchableOpacity>}
       <View style={styles.textContainer}>
         <Text style={styles.text}>SwipeMe</Text>
       </View>
-      <View style={styles.iconContainer}>
-        <Image style={styles.icon} source={require('../../assests/edit.png')} />
-      </View>
+      <TouchableOpacity onPress={props.onClick} style={styles.iconContainer}>
+        {candidate?
+        <Image style={styles.icon} source={require('../../assests/edit.png')} />:
+        <Icon
+        name="message1"
+        type={Icons.AntDesign}
+        size={25}
+        color="#27374F"
+      />
+        }
+      </TouchableOpacity >
     </View>
   );
 };

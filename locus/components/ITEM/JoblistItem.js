@@ -4,6 +4,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import Color from '../../Constants/Color';
 
 const JoblistItem = props => {
+  // console.log(props)
   return (
     <View style={styles.itemBox}>
       <View style={styles.imageConatiner}>
@@ -13,12 +14,12 @@ const JoblistItem = props => {
         />
       </View>
       <View>
-        <Text style={styles.mainText}>Google LLC</Text>
-        <Text>Senior UI/UX Designer</Text>
+        <Text style={styles.mainText}>{props.job.organization}</Text>
+        <Text>{props.job.position}</Text>
       </View>
       <TouchableOpacity
         style={styles.arrow}
-        onPress={() => props.props.navigation.navigate('jobdetails')}>
+        onPress={() => props.props.navigation.navigate('swipe')}>
         <Icon name="arrow-right" size={25}></Icon>
       </TouchableOpacity>
     </View>
